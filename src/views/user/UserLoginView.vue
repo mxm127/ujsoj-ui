@@ -18,9 +18,19 @@
         />
       </a-form-item>
       <a-form-item>
-        <a-button type="primary" html-type="submit" style="width: 120px">
-          登录
-        </a-button>
+        <div
+          style="
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+          "
+        >
+          <a-button type="primary" html-type="submit" style="width: 120px">
+            登录
+          </a-button>
+          <a-link @click="goRegister">新用户注册</a-link>
+        </div>
       </a-form-item>
     </a-form>
   </div>
@@ -50,6 +60,7 @@ const store = useStore();
  */
 const handleSubmit = async () => {
   const res = await UserControllerService.userLoginUsingPost(form);
+  console.log(res);
   // 登录成功，跳转到主页
   if (res.code === 0) {
     await store.dispatch("user/getLoginUser");
@@ -61,4 +72,8 @@ const handleSubmit = async () => {
     message.error("登陆失败，" + res.message);
   }
 };
+
+const goRegister = async () => {
+    router.push("/user/register");
+  }
 </script>

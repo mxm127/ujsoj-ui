@@ -14,15 +14,16 @@
       </a-menu>
     </a-col>
     <a-col flex="100px">
-    <!-- 未登录状态 -->
-    <a-link v-if="!isUserLoggedIn">未登录</a-link>
-    <!-- 已登录状态 -->
-    <a-popover v-else trigger="click" position="bottom">
-      <a-link>{{ store.state.user.loginUser.userName }}</a-link>
-      <template #content>
-        <p class="logout" @click="logout">退出登录</p>
-      </template>
-    </a-popover>
+      <!-- 未登录状态 -->
+      <a-link v-if="!store.state.user.loginUser.id" @click="gologin">未登录</a-link>
+      <!-- 已登录状态 -->
+      <a-popover v-else trigger="click" position="bottom">
+        <!-- 没名称用户 -->
+        <a-link>{{ store.state.user.loginUser.userName ?? "无名"  }}</a-link>
+        <template #content>
+          <p class="logout" @click="logout">退出登录</p>
+        </template>
+      </a-popover>
     </a-col>
   </a-row>
 </template>
@@ -37,10 +38,6 @@ import ACCESS_ENUM from "@/access/accessEnum";
 
 const router = useRouter();
 const store = useStore();
-
-const isUserLoggedIn = computed(() => {
-  return !!store.state.user?.loginUser?.userName;
-});
 
 // 展示在菜单的路由数组
 const visibleRoutes = computed(() => {
@@ -88,12 +85,19 @@ const logout = () => {
   });
   window.location.reload();
 };
+
+const gologin = () => {
+  router.push({
+    path: "/user/login",
+  });
+};
 </script>
 
 <style scoped>
 .logout {
   cursor: pointer;
 }
+
 .title-bar {
   display: flex;
   align-items: center;

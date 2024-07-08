@@ -5,11 +5,7 @@
         <a-input v-model="searchParams.questionId" placeholder="请输入" />
       </a-form-item>
       <a-form-item field="language" label="编程语言" style="min-width: 240px">
-        <a-select
-          v-model="searchParams.language"
-          :style="{ width: '320px' }"
-          placeholder="选择编程语言"
-        >
+        <a-select v-model="searchParams.language" :style="{ width: '320px' }" placeholder="选择编程语言">
           <a-option>java</a-option>
           <a-option>cpp</a-option>
           <a-option>go</a-option>
@@ -21,24 +17,14 @@
       </a-form-item>
     </a-form>
     <a-divider size="0" />
-    <a-table
-      :ref="tableRef"
-      :columns="columns"
-      :data="dataList"
-      :pagination="{
-        showTotal: true,
-        pageSize: searchParams.pageSize,
-        current: searchParams.current,
-        total,
-      }"
-      @page-change="onPageChange"
-    >
+    <a-table :ref="tableRef" :columns="columns" :data="dataList" :pagination="{
+      showTotal: true,
+      pageSize: searchParams.pageSize,
+      current: searchParams.current,
+      total,
+    }" @page-change="onPageChange">
       <template #judgeInfo="{ record }">
-        <a-descriptions
-          :data="transformJudgeInfo(record.judgeInfo)"
-          layout="inline-horizontal"
-          size="small"
-        />
+        <a-descriptions :data="transformJudgeInfo(record.judgeInfo)" layout="inline-horizontal" size="small" />
       </template>
       <!-- 判题状态 -->
       <template #status="{ record }">
@@ -52,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watchEffect,computed } from "vue";
+import { onMounted, ref, watchEffect, computed } from "vue";
 import {
   Question,
   QuestionControllerService,
@@ -167,10 +153,27 @@ const doSubmit = () => {
 };
 // 将 judgeInfo 对象转换为 descriptions 需要的数组形式
 const transformJudgeInfo = (judgeInfo: Record<string, any>) => {
-  return Object.keys(judgeInfo).map(key => ({
-    label: key,
-    value: judgeInfo[key]
-  }));
+  return Object.keys(judgeInfo).map(key => {
+
+    if (key === 'time') {
+      return {
+        label: key,
+        value: `${judgeInfo[key]}ms`
+      };
+    }
+
+    if (key === 'memory') {
+      return {
+        label: key,
+        value: `${judgeInfo[key]}kb`
+      };
+    }
+
+    return {
+      label: key,
+      value: `${judgeInfo[key]}`
+    };
+  });
 };
 
 // 根据 status 返回对应的状态字符串

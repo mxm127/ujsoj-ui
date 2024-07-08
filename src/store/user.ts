@@ -15,6 +15,8 @@ export default {
       // 从远程请求获取登录信息
       const res = await UserControllerService.getLoginUserUsingGet();
       if (res.code === 0) {
+        console.log('LoginUserres.data', res.data);
+        
         commit("updateUser", res.data);
       } else {
         commit("updateUser", {

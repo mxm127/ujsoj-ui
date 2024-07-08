@@ -10,10 +10,10 @@
                 :column="{ xs: 1, md: 2, lg: 3 }"
               >
                 <a-descriptions-item label="时间限制">
-                  {{ question.judgeConfig.timeLimit ?? 0 }}
+                  {{ question.judgeConfig.timeLimit ?? 0 }}ms
                 </a-descriptions-item>
                 <a-descriptions-item label="内存限制">
-                  {{ question.judgeConfig.memoryLimit ?? 0 }}
+                  {{ question.judgeConfig.memoryLimit ?? 0 }}kb
                 </a-descriptions-item>
                 <a-descriptions-item label="堆栈限制">
                   {{ question.judgeConfig.stackLimit ?? 0 }}
@@ -71,6 +71,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watchEffect, withDefaults, defineProps } from "vue";
+import { useRouter } from "vue-router";
 import message from "@arco-design/web-vue/es/message";
 import CodeEditor from "@/components/CodeEditor.vue";
 import MdViewer from "@/components/MdViewer.vue";
@@ -89,6 +90,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const question = ref<QuestionVO>();
+const router = useRouter();
 
 const loadData = async () => {
   const res = await QuestionControllerService.getQuestionVoByIdUsingGet(
@@ -122,6 +124,7 @@ const doSubmit = async () => {
   });
   if (res.code === 0) {
     message.success("提交成功");
+    router.push("/question_submit");
   } else {
     message.error("提交失败," + res.message);
   }
